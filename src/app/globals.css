@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ── Fondos ─────────────────────────────────────── */
+  --color-base:      #0F0F10;
+  --color-layer:     #1A1A1C;
+  --color-card:      #222225;
+
+  /* ── Texto ──────────────────────────────────────── */
+  --color-primary:   #EAEAEA;
+  --color-secondary: #A0A0A0;
+  --color-muted:     #6E6E6E;
+
+  /* ── Identidad gaucha ───────────────────────────── */
+  --color-bronze:    #CD7F32;
+  --color-earth:     #8B5E3C;
+
+  /* ── CTA / Acción ───────────────────────────────── */
+  --color-cta:       #E67E22;
+  --color-cta-dark:  #D35400;
+
+  /* ── Estados ────────────────────────────────────── */
+  --color-success:   #2ECC71;
+  --color-warning:   #F1C40F;
+  --color-danger:    #E74C3C;
+
+  /* ── Universos (solo badges/detalles) ───────────── */
+  --color-starwars:  #F5C542;
+  --color-potter:    #8E44AD;
+  --color-future:    #E74C3C;
+  --color-anime:     #3498DB;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:    var(--font-inter);
+  --font-heading: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --bg-primary:   #0F0F10;
+  --bg-secondary: #1A1A1C;
+  --surface:      #222225;
+  --text-primary: #EAEAEA;
+  --text-secondary: #A0A0A0;
+  --text-muted:   #6E6E6E;
+  --accent-bronze: #CD7F32;
+  --accent-earth: #8B5E3C;
+  --cta:          #E67E22;
+  --cta-hover:    #D35400;
+  --success:      #2ECC71;
+  --warning:      #F1C40F;
+  --danger:       #E74C3C;
+  --starwars:     #F5C542;
+  --potter:       #8E44AD;
+  --future:       #E74C3C;
+  --anime:        #3498DB;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
