@@ -6,6 +6,7 @@ import { UniversesCTA } from "@/components/home/UniversesCTA";
 import { HogarSection } from "@/components/home/HogarSection";
 import { InspirationGrid } from "@/components/home/InspirationGrid";
 import { WorksGallery } from "@/components/home/WorksGallery";
+import { ProcessSection } from "@/components/home/ProcessSection";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -19,6 +20,7 @@ export default function HomePage() {
         <HogarSection />
         <InspirationGrid />
         <WorksGallery />
+        <ProcessSection />
 
         {/* CTA final */}
         <section className="bg-layer px-4 py-16 text-center sm:px-6 sm:py-24">

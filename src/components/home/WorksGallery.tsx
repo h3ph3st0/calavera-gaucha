@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { WORKS, type WorkCategory } from "@/lib/social-proof";
 
@@ -8,17 +9,29 @@ type FilterOption = WorkCategory | "all";
 
 const FILTERS: { value: FilterOption; label: string }[] = [
   { value: "all", label: "Todos" },
-  { value: "llavero", label: "Llaveros" },
   { value: "universos", label: "Universos" },
-  { value: "hogar", label: "Hogar" },
+  { value: "llavero", label: "Llaveros" },
   { value: "personalizado", label: "Personalizados" },
+  { value: "hogar", label: "Hogar" },
 ];
 
 function WorkCard({ work }: { work: (typeof WORKS)[0] }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/8 bg-card transition-all duration-200 hover:border-white/20 hover:shadow-lg hover:shadow-black/20">
-      <div className={cn("flex h-36 items-center justify-center bg-gradient-to-br", work.gradient)}>
-        <span className="text-5xl">{work.emoji}</span>
+    <div className="group overflow-hidden rounded-2xl border border-white/8 bg-card transition-all duration-200 hover:border-white/20 hover:shadow-lg hover:shadow-black/20">
+      <div className="relative h-48 w-full overflow-hidden">
+        {work.image ? (
+          <Image
+            src={work.image}
+            alt={work.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          <div className={cn("flex h-full w-full items-center justify-center bg-gradient-to-br", work.gradient)}>
+            <span className="text-5xl">{work.emoji}</span>
+          </div>
+        )}
       </div>
       <div className="p-4">
         <p className="text-sm font-semibold leading-tight text-primary">{work.title}</p>
@@ -44,7 +57,7 @@ export function WorksGallery() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-bronze/30 bg-bronze/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-bronze">
-            Prueba social
+            Trabajos reales
           </span>
           <h2 className="mt-4 text-2xl font-bold text-primary sm:text-3xl">Lo que ya hicimos</h2>
           <p className="mt-3 text-secondary">
