@@ -33,12 +33,10 @@ export default async function LeadsPage({ searchParams }: Props) {
 
   const supabase = createServiceClient();
 
-  // Consulta de conteo (HEAD, sin filas)
   let countQ = supabase.from("quotes").select("*", { count: "exact", head: true });
   if (activeStatus !== "all") countQ = countQ.eq("status", activeStatus);
   const { count } = await countQ;
 
-  // Consulta de datos paginada
   let dataQ = supabase
     .from("quotes")
     .select(
@@ -52,35 +50,28 @@ export default async function LeadsPage({ searchParams }: Props) {
   const { data: leads, error } = await dataQ;
   if (error) console.error("[admin/leads] fetch error", error);
 
-  // Archivos adjuntos — una sola query + signed URLs (1 h de validez)
+  // Archivos adjuntos por quote_id
   const leadIds = (leads ?? []).map((l) => l.id);
-  const filesByQuoteId: Record<string, { name: string; url: string; size: number }[]> = {};
+  const filesByLeadId: Record<string, { name: string; url: string; size: number }[]> = {};
 
   if (leadIds.length > 0) {
-    const { data: filesData, error: filesError } = await supabase
+    const { data: filesData } = await supabase
       .from("quote_files")
       .select("quote_id, storage_path, original_name, size_bytes")
       .in("quote_id", leadIds);
 
-    console.log("[files] leadIds:", leadIds);
-    console.log("[files] filesData:", filesData);
-    console.log("[files] filesError:", filesError);
-
     for (const f of filesData ?? []) {
-      console.log("[files] size_bytes type:", typeof f.size_bytes, String(f.size_bytes));
-      const { data: { publicUrl } } = supabase.storage.from("quote-files").getPublicUrl(f.storage_path);
-      if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
-      filesByQuoteId[f.quote_id].push({ name: f.original_name, url: publicUrl, size: Number(f.size_bytes) });
+      const { data: { publicUrl } } = supabase.storage
+        .from("quote-files")
+        .getPublicUrl(f.storage_path);
+      if (!filesByLeadId[f.quote_id]) filesByLeadId[f.quote_id] = [];
+      filesByLeadId[f.quote_id].push({
+        name: f.original_name,
+        url: publicUrl,
+        size: Number(f.size_bytes),
+      });
     }
-    console.log("[files] filesByQuoteId keys:", Object.keys(filesByQuoteId));
   }
-
-  const leadsWithFiles = (leads ?? []).map((l) => ({
-    ...l,
-    files: filesByQuoteId[l.id] ?? [],
-  }));
-
-  console.log("[files] leadsWithFiles:", leadsWithFiles.map((l) => ({ id: l.id.slice(0, 8), files: l.files?.length ?? "undefined" })));
 
   const totalCount  = count ?? 0;
   const totalPages  = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
@@ -125,7 +116,7 @@ export default async function LeadsPage({ searchParams }: Props) {
         </div>
       ) : (
         <>
-          <LeadsTable leads={leadsWithFiles} />
+          <LeadsTable leads={leads} filesByLeadId={filesByLeadId} />
           {totalPages > 1 && (
             <Pagination
               page={safePage}

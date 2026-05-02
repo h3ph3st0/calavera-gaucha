@@ -9,7 +9,7 @@ import type { QuoteStatus } from "@/lib/supabase/types";
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-interface QuoteFile {
+export interface QuoteFile {
   name: string;
   url: string;
   size: number;
@@ -32,7 +32,6 @@ interface Lead {
   admin_notes: string | null;
   created_at: string;
   updated_at: string;
-  files: QuoteFile[];
 }
 
 // ─── Badges ───────────────────────────────────────────────────────────────────
@@ -89,7 +88,7 @@ function formatDate(iso: string) {
 
 // ─── Fila individual ──────────────────────────────────────────────────────────
 
-function LeadRow({ lead }: { lead: Lead }) {
+function LeadRow({ lead, files }: { lead: Lead; files: QuoteFile[] }) {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState<QuoteStatus>(lead.status);
   const [notes, setNotes] = useState(lead.admin_notes ?? "");
@@ -145,10 +144,10 @@ function LeadRow({ lead }: { lead: Lead }) {
             {lead.size && <span>📐 {lead.size}</span>}
             {lead.material && lead.material !== "no-se" && <span>🎨 {lead.material}</span>}
             <span>🔢 {lead.quantity} ud.</span>
-            {lead.files.length > 0 && (
+            {files.length > 0 && (
               <span className="flex items-center gap-1 text-bronze">
                 <Paperclip className="h-3 w-3" />
-                {lead.files.length} archivo{lead.files.length !== 1 ? "s" : ""}
+                {files.length} archivo{files.length !== 1 ? "s" : ""}
               </span>
             )}
             <span>#{ref}</span>
@@ -213,14 +212,14 @@ function LeadRow({ lead }: { lead: Lead }) {
             </div>
           </div>
 
-          {lead.files.length > 0 && (
+          {files.length > 0 && (
             <div className="mt-4">
               <div className="mb-1.5 flex items-center gap-1.5">
                 <Paperclip className="h-3.5 w-3.5 text-muted" />
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted">Archivos adjuntos</p>
               </div>
               <div className="space-y-1.5">
-                {lead.files.map((f, i) => (
+                {files.map((f, i) => (
                   <a
                     key={i}
                     href={f.url}
@@ -287,11 +286,17 @@ function LeadRow({ lead }: { lead: Lead }) {
 
 // ─── Tabla principal ──────────────────────────────────────────────────────────
 
-export function LeadsTable({ leads }: { leads: Lead[] }) {
+export function LeadsTable({
+  leads,
+  filesByLeadId,
+}: {
+  leads: Lead[];
+  filesByLeadId: Record<string, QuoteFile[]>;
+}) {
   return (
     <div className="space-y-3">
       {leads.map((lead) => (
-        <LeadRow key={lead.id} lead={lead} />
+        <LeadRow key={lead.id} lead={lead} files={filesByLeadId[lead.id] ?? []} />
       ))}
     </div>
   );
