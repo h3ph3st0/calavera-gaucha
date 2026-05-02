@@ -57,10 +57,14 @@ export default async function LeadsPage({ searchParams }: Props) {
   const filesByQuoteId: Record<string, { name: string; url: string; size: number }[]> = {};
 
   if (leadIds.length > 0) {
-    const { data: filesData } = await supabase
+    const { data: filesData, error: filesError } = await supabase
       .from("quote_files")
       .select("quote_id, storage_path, original_name, size_bytes")
       .in("quote_id", leadIds);
+
+    console.log("[files] leadIds:", leadIds);
+    console.log("[files] filesData:", filesData);
+    console.log("[files] filesError:", filesError);
 
     for (const f of filesData ?? []) {
       const { data: { publicUrl } } = supabase.storage
