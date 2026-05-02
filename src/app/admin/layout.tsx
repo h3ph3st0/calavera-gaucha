@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Printer, Users, ImageIcon } from "lucide-react";
+import { Printer, Users, ImageIcon, LayoutGrid, Globe } from "lucide-react";
 import { LogoutButton } from "@/components/admin/LogoutButton";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -26,6 +26,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               >
                 <ImageIcon className="h-4 w-4" />
                 Trabajos
+              </Link>
+              <Link
+                href="/admin/catalogo"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-secondary transition-colors hover:bg-card hover:text-primary"
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Catálogo
+              </Link>
+              <Link
+                href="/admin/universos"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-secondary transition-colors hover:bg-card hover:text-primary"
+              >
+                <Globe className="h-4 w-4" />
+                Universos
               </Link>
             </nav>
           </div>

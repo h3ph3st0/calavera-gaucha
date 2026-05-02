@@ -3,14 +3,11 @@ import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { CATEGORY_LABELS, type Category } from "@/lib/catalog";
 import {
-  PRODUCTS,
-  UNIVERSES,
-  CATEGORY_LABELS,
+  getProducts,
   getProductsByCategory,
-  getProductsByUniverse,
-  type Category,
-} from "@/lib/catalog";
+} from "@/lib/supabase/catalog";
 
 export const metadata: Metadata = {
   title: "Catálogo",
@@ -29,9 +26,17 @@ export default async function CatalogoPage({
     (k) => k === categoria
   ) ?? null) as Category | null;
 
+  const allProducts = activeCategory
+    ? await getProductsByCategory(activeCategory)
+    : await getProducts();
+
   const productosAMostrar = activeCategory
-    ? getProductsByCategory(activeCategory)
-    : PRODUCTS.filter((p) => p.category !== "universos");
+    ? allProducts
+    : allProducts.filter((p) => p.category !== "universos");
+
+  const universosProducts = activeCategory
+    ? []
+    : allProducts.filter((p) => p.category === "universos").slice(0, 3);
 
   return (
     <>
@@ -79,7 +84,7 @@ export default async function CatalogoPage({
             ))}
           </div>
 
-          {!activeCategory && (
+          {!activeCategory && universosProducts.length > 0 && (
             <div className="mt-16">
               <div className="mb-6 flex items-baseline justify-between">
                 <div>
@@ -97,11 +102,9 @@ export default async function CatalogoPage({
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {PRODUCTS.filter((p) => p.category === "universos")
-                  .slice(0, 3)
-                  .map((product) => (
-                    <ProductCard key={product.slug} product={product} compact />
-                  ))}
+                {universosProducts.map((product) => (
+                  <ProductCard key={product.slug} product={product} compact />
+                ))}
               </div>
 
               <div className="mt-4 text-center">

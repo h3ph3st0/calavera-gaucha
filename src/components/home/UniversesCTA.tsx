@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { UNIVERSES } from "@/lib/catalog";
+import { getUniverses } from "@/lib/supabase/catalog";
 
 const ACCENT_STYLE: Record<string, { border: string; text: string }> = {
   indigo:  { border: "border-starwars/20 hover:border-starwars/50", text: "text-starwars" },
@@ -9,7 +9,9 @@ const ACCENT_STYLE: Record<string, { border: string; text: string }> = {
   rose:    { border: "border-anime/20 hover:border-anime/50",      text: "text-anime"   },
 };
 
-export function UniversesCTA() {
+export async function UniversesCTA() {
+  const universes = await getUniverses();
+
   return (
     <section className="bg-base px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-6xl">
@@ -21,7 +23,7 @@ export function UniversesCTA() {
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {UNIVERSES.map((u) => {
+          {universes.map((u) => {
             const style = ACCENT_STYLE[u.accentColor] ?? ACCENT_STYLE.indigo;
             return (
               <Link

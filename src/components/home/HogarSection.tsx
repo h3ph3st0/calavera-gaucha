@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getProductsByCategory, formatPrice } from "@/lib/catalog";
+import { formatPrice } from "@/lib/catalog";
+import { getProductsByCategory } from "@/lib/supabase/catalog";
 
 const HOGAR_EMOJI: Record<string, string> = {
   "porta-control":         "📺",
@@ -10,8 +11,8 @@ const HOGAR_EMOJI: Record<string, string> = {
   "soporte-tablet-cocina": "📱",
 };
 
-export function HogarSection() {
-  const products = getProductsByCategory("hogar").slice(0, 4);
+export async function HogarSection() {
+  const products = (await getProductsByCategory("hogar")).slice(0, 4);
 
   return (
     <section className="bg-layer px-4 py-16 sm:px-6 sm:py-24">

@@ -38,8 +38,13 @@ export interface Database {
           slug: string;
           description: string | null;
           theme: string | null;
+          tagline: string | null;
+          accent_color: string | null;
+          icon: string | null;
+          preview_image: string | null;
           is_active: boolean;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -48,6 +53,10 @@ export interface Database {
           slug: string;
           description?: string | null;
           theme?: string | null;
+          tagline?: string | null;
+          accent_color?: string | null;
+          icon?: string | null;
+          preview_image?: string | null;
           is_active?: boolean;
         };
         Update: {
@@ -55,6 +64,10 @@ export interface Database {
           slug?: string;
           description?: string | null;
           theme?: string | null;
+          tagline?: string | null;
+          accent_color?: string | null;
+          icon?: string | null;
+          preview_image?: string | null;
           is_active?: boolean;
         };
         Relationships: [];
@@ -97,7 +110,17 @@ export interface Database {
           images: string[];
           is_active: boolean;
           metadata: Json;
+          tagline: string | null;
+          size_range: string | null;
+          material: string | null;
+          is_high_rotation: boolean;
+          tags: string[];
+          image_url: string | null;
+          prefill: Json | null;
+          universe_id: string | null;
+          category_slug: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -110,6 +133,15 @@ export interface Database {
           images?: string[];
           is_active?: boolean;
           metadata?: Json;
+          tagline?: string | null;
+          size_range?: string | null;
+          material?: string | null;
+          is_high_rotation?: boolean;
+          tags?: string[];
+          image_url?: string | null;
+          prefill?: Json | null;
+          universe_id?: string | null;
+          category_slug?: string | null;
         };
         Update: {
           category_id?: string | null;
@@ -120,6 +152,15 @@ export interface Database {
           images?: string[];
           is_active?: boolean;
           metadata?: Json;
+          tagline?: string | null;
+          size_range?: string | null;
+          material?: string | null;
+          is_high_rotation?: boolean;
+          tags?: string[];
+          image_url?: string | null;
+          prefill?: Json | null;
+          universe_id?: string | null;
+          category_slug?: string | null;
         };
         Relationships: [];
       };

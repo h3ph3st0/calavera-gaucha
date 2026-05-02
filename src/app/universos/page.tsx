@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { UniverseCard } from "@/components/catalog/UniverseCard";
-import { UNIVERSES, getProductsByUniverse } from "@/lib/catalog";
+import { getUniverses, getProductsByUniverse } from "@/lib/supabase/catalog";
+import type { UniverseSlug } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "Universos",
   description: "Figuras y decoración temática: ciencia ficción, fantasía, retro y anime. Impresión 3D bajo demanda.",
 };
 
-export default function UniversosPage() {
+export default async function UniversosPage() {
+  const universes = await getUniverses();
+  const counts = await Promise.all(
+    universes.map((u) => getProductsByUniverse(u.slug as UniverseSlug).then((p) => p.length))
+  );
+
   return (
     <>
       <Header />
@@ -25,10 +31,9 @@ export default function UniversosPage() {
 
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <div className="grid gap-6 sm:grid-cols-2">
-            {UNIVERSES.map((universe) => {
-              const count = getProductsByUniverse(universe.slug).length;
-              return <UniverseCard key={universe.slug} universe={universe} productCount={count} />;
-            })}
+            {universes.map((universe, i) => (
+              <UniverseCard key={universe.slug} universe={universe} productCount={counts[i]} />
+            ))}
           </div>
 
           <div className="mt-16 rounded-2xl border border-white/8 bg-card px-6 py-10 text-center">

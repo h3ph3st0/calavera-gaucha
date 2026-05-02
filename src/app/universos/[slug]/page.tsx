@@ -6,17 +6,24 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ProductCard } from "@/components/catalog/ProductCard";
-import { UNIVERSES, getUniverseBySlug, getProductsByUniverse } from "@/lib/catalog";
+import type { UniverseSlug } from "@/lib/catalog";
+import {
+  getUniverseBySlug,
+  getUniverses,
+  getProductsByUniverse,
+  getUniverseSlugs,
+} from "@/lib/supabase/catalog";
 import { getWorksByUniverse } from "@/lib/social-proof";
 import { cn } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return UNIVERSES.map((u) => ({ slug: u.slug }));
+export async function generateStaticParams() {
+  const slugs = await getUniverseSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const universe = getUniverseBySlug(slug);
+  const universe = await getUniverseBySlug(slug);
   if (!universe) return {};
   return {
     title: universe.name,
@@ -53,11 +60,15 @@ const ACCENT_STYLES: Record<string, { glow: string; badge: string; btn: string; 
 
 export default async function UniversePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const universe = getUniverseBySlug(slug);
+  const [universe, allUniverses] = await Promise.all([
+    getUniverseBySlug(slug),
+    getUniverses(),
+  ]);
   if (!universe) notFound();
 
-  const products = getProductsByUniverse(universe.slug);
+  const products = await getProductsByUniverse(universe.slug as UniverseSlug);
   const works = getWorksByUniverse(universe.slug);
+
   const styles = ACCENT_STYLES[universe.accentColor] ?? ACCENT_STYLES.indigo;
 
   const customQuoteUrl =
@@ -180,7 +191,7 @@ export default async function UniversePage({ params }: { params: Promise<{ slug:
               Otros universos
             </h3>
             <div className="flex flex-wrap gap-3">
-              {UNIVERSES.filter((u) => u.slug !== universe.slug).map((u) => (
+              {allUniverses.filter((u) => u.slug !== universe.slug).map((u) => (
                 <Link
                   key={u.slug}
                   href={`/universos/${u.slug}`}

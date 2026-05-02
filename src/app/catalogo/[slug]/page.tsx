@@ -6,23 +6,23 @@ import { ArrowLeft, ArrowRight, Package, Ruler, Layers } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { formatPrice, CATEGORY_LABELS } from "@/lib/catalog";
 import {
-  PRODUCTS,
-  UNIVERSES,
   getProductBySlug,
   getProductsByUniverse,
   getProductsByCategory,
-  formatPrice,
-  CATEGORY_LABELS,
-} from "@/lib/catalog";
+  getUniverseBySlug,
+  getProductSlugs,
+} from "@/lib/supabase/catalog";
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const slugs = await getProductSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return {};
   return {
     title: product.name,
@@ -47,7 +47,7 @@ const ICON: Record<string, string> = {
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
   const gradient = product.universeSlug
@@ -55,13 +55,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     : GRADIENT[product.category];
 
   const universe = product.universeSlug
-    ? UNIVERSES.find((u) => u.slug === product.universeSlug)
+    ? await getUniverseBySlug(product.universeSlug)
     : null;
 
   const related = (
     product.universeSlug
-      ? getProductsByUniverse(product.universeSlug)
-      : getProductsByCategory(product.category)
+      ? await getProductsByUniverse(product.universeSlug)
+      : await getProductsByCategory(product.category)
   )
     .filter((p) => p.slug !== product.slug)
     .slice(0, 3);
