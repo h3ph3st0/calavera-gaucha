@@ -67,12 +67,17 @@ export default async function LeadsPage({ searchParams }: Props) {
     console.log("[files] filesError:", filesError);
 
     for (const f of filesData ?? []) {
-      const { data: { publicUrl } } = supabase.storage
-        .from("quote-files")
-        .getPublicUrl(f.storage_path);
-      if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
-      filesByQuoteId[f.quote_id].push({ name: f.original_name, url: publicUrl, size: f.size_bytes });
+      try {
+        const result = supabase.storage.from("quote-files").getPublicUrl(f.storage_path);
+        console.log("[files] getPublicUrl result:", JSON.stringify(result));
+        const publicUrl = result.data.publicUrl;
+        if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
+        filesByQuoteId[f.quote_id].push({ name: f.original_name, url: publicUrl, size: f.size_bytes });
+      } catch (e) {
+        console.error("[files] getPublicUrl threw:", e);
+      }
     }
+    console.log("[files] filesByQuoteId keys:", Object.keys(filesByQuoteId));
   }
 
   const leadsWithFiles = (leads ?? []).map((l) => ({
