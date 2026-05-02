@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { createServiceClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Pencil, Trash2 } from "lucide-react";
-import { deleteWork } from "./actions";
+import { Plus, Pencil } from "lucide-react";
+import { DeleteWorkButton } from "@/components/admin/DeleteWorkButton";
 
 export const metadata: Metadata = { title: "Trabajos — Admin" };
 export const dynamic = "force-dynamic";
@@ -83,15 +83,7 @@ export default async function WorksPage() {
                   >
                     <Pencil className="h-4 w-4" />
                   </Link>
-                  <form action={deleteWork.bind(null, work.id)}>
-                    <button
-                      type="submit"
-                      className="rounded-lg p-2 text-secondary transition-colors hover:bg-red-500/10 hover:text-red-400"
-                      onClick={e => { if (!confirm(`¿Borrar "${work.title}" y todas sus fotos?`)) e.preventDefault(); }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </form>
+                  <DeleteWorkButton workId={work.id} title={work.title} />
                 </div>
               </div>
             );
