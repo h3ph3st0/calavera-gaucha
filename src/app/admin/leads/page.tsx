@@ -62,22 +62,12 @@ export default async function LeadsPage({ searchParams }: Props) {
       .select("quote_id, storage_path, original_name, size_bytes")
       .in("quote_id", leadIds);
 
-    const paths = (filesData ?? []).map((f) => f.storage_path);
-    if (paths.length > 0) {
-      const { data: signedData } = await supabase.storage
+    for (const f of filesData ?? []) {
+      const { data: { publicUrl } } = supabase.storage
         .from("quote-files")
-        .createSignedUrls(paths, 3600);
-
-      const urlMap = new Map(
-        (signedData ?? []).filter((s) => s.signedUrl).map((s) => [s.path, s.signedUrl])
-      );
-
-      for (const f of filesData ?? []) {
-        const url = urlMap.get(f.storage_path);
-        if (!url) continue;
-        if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
-        filesByQuoteId[f.quote_id].push({ name: f.original_name, url, size: f.size_bytes });
-      }
+        .getPublicUrl(f.storage_path);
+      if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
+      filesByQuoteId[f.quote_id].push({ name: f.original_name, url: publicUrl, size: f.size_bytes });
     }
   }
 
