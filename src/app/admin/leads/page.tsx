@@ -80,6 +80,8 @@ export default async function LeadsPage({ searchParams }: Props) {
     files: filesByQuoteId[l.id] ?? [],
   }));
 
+  console.log("[files] leadsWithFiles:", leadsWithFiles.map((l) => ({ id: l.id.slice(0, 8), files: l.files?.length ?? "undefined" })));
+
   const totalCount  = count ?? 0;
   const totalPages  = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   const safePage    = Math.min(page, totalPages);
