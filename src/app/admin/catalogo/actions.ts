@@ -31,13 +31,16 @@ function slugify(text: string): string {
     .slice(0, 80);
 }
 
-function parsePrefill(formData: FormData) {
-  return {
+function parsePrefill(formData: FormData): Record<string, string> {
+  const result: Record<string, string> = {
     description: (formData.get("prefill_description") as string)?.trim() ?? "",
     category: (formData.get("prefill_category") as string)?.trim() ?? "",
-    size: (formData.get("prefill_size") as string)?.trim() || undefined,
-    material: (formData.get("prefill_material") as string)?.trim() || undefined,
   };
+  const size = (formData.get("prefill_size") as string)?.trim();
+  const material = (formData.get("prefill_material") as string)?.trim();
+  if (size) result.size = size;
+  if (material) result.material = material;
+  return result;
 }
 
 export async function createProduct(prevState: ActionState, formData: FormData): Promise<ActionState> {
