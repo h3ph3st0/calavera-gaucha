@@ -174,6 +174,49 @@ export interface Database {
         };
         Relationships: [];
       };
+      works: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          title: string;
+          description: string | null;
+          is_published: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          title: string;
+          description?: string | null;
+          is_published?: boolean;
+        };
+        Update: {
+          title?: string;
+          description?: string | null;
+          is_published?: boolean;
+        };
+        Relationships: [];
+      };
+      work_images: {
+        Row: {
+          id: string;
+          work_id: string;
+          storage_path: string;
+          original_name: string;
+          display_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          work_id: string;
+          storage_path: string;
+          original_name: string;
+          display_order?: number;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
       quote_files: {
         Row: {
           id: string;

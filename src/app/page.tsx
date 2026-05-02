@@ -7,6 +7,7 @@ import { HogarSection } from "@/components/home/HogarSection";
 import { InspirationGrid } from "@/components/home/InspirationGrid";
 import { WorksGallery } from "@/components/home/WorksGallery";
 import { ProcessSection } from "@/components/home/ProcessSection";
+import { LatestWorksSection } from "@/components/home/LatestWorksSection";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -19,6 +20,7 @@ export default function HomePage() {
         <UniversesCTA />
         <HogarSection />
         <InspirationGrid />
+        <LatestWorksSection />
         <WorksGallery />
         <ProcessSection />
 
