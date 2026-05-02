@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Product, formatPrice } from "@/lib/catalog";
@@ -38,8 +39,20 @@ export function ProductCard({ product, compact = false }: Props) {
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-card transition-all hover:border-bronze/30 hover:shadow-lg hover:shadow-black/30">
-      <div className={cn("flex h-40 items-center justify-center bg-gradient-to-br text-5xl", gradient)}>
-        {CATEGORY_ICON[product.category]}
+      <div className={cn("relative h-40 overflow-hidden bg-gradient-to-br", gradient)}>
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-5xl">
+            {CATEGORY_ICON[product.category]}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-5">

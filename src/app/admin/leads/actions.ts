@@ -13,7 +13,7 @@ async function assertAdmin() {
 
 export async function updateLeadStatus(leadId: string, status: QuoteStatus) {
   await assertAdmin();
-  const supabase = await createServiceClient();
+  const supabase = createServiceClient();
   const { error } = await supabase
     .from("quotes")
     .update({ status })
@@ -24,7 +24,7 @@ export async function updateLeadStatus(leadId: string, status: QuoteStatus) {
 
 export async function updateLeadNotes(leadId: string, notes: string) {
   await assertAdmin();
-  const supabase = await createServiceClient();
+  const supabase = createServiceClient();
   const { error } = await supabase
     .from("quotes")
     .update({ admin_notes: notes })

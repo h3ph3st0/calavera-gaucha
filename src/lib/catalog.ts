@@ -16,6 +16,7 @@ export interface Product {
   material: string;          // material por defecto sugerido
   isHighRotation: boolean;
   tags: string[];
+  image?: string;
   // Datos para prefill del formulario de presupuesto
   prefill: {
     description: string;     // texto exacto que se carga en el campo descripción
@@ -33,6 +34,7 @@ export interface Universe {
   theme: string;
   accentColor: string;       // clase Tailwind para el color del universo
   icon: string;              // emoji
+  previewImage?: string;     // foto representativa del universo
 }
 
 // ─── Universos ────────────────────────────────────────────────────────────────
@@ -46,6 +48,7 @@ export const UNIVERSES: Universe[] = [
     theme: "sci-fi",
     accentColor: "indigo",
     icon: "🚀",
+    previewImage: "/works/darth-vader.jpg",
   },
   {
     slug: "fantasia-medieval",
@@ -55,6 +58,7 @@ export const UNIVERSES: Universe[] = [
     theme: "fantasy",
     accentColor: "emerald",
     icon: "⚔️",
+    previewImage: "/works/dragon-articulado.jpg",
   },
   {
     slug: "retro",
@@ -64,6 +68,7 @@ export const UNIVERSES: Universe[] = [
     theme: "retro",
     accentColor: "purple",
     icon: "📼",
+    previewImage: "/works/vecna-cupula.jpg",
   },
   {
     slug: "anime-manga",
@@ -73,6 +78,7 @@ export const UNIVERSES: Universe[] = [
     theme: "anime",
     accentColor: "rose",
     icon: "⛩️",
+    previewImage: "/works/gogeta-dragon-ball.jpg",
   },
 ];
 
@@ -91,6 +97,7 @@ export const PRODUCTS: Product[] = [
     material: "PLA",
     isHighRotation: true,
     tags: ["regalo", "personalizado", "nombre"],
+    image: "/works/llaveros-bulk-cumple.jpg",
     prefill: {
       description: "Quiero un llavero con texto personalizado. El texto y fuente lo definimos en el chat.",
       category: "llavero",
@@ -109,6 +116,7 @@ export const PRODUCTS: Product[] = [
     material: "PLA",
     isHighRotation: true,
     tags: ["regalo", "personalizado", "figura"],
+    image: "/works/llavero-stitch.jpg",
     prefill: {
       description: "Quiero un llavero con una figura personalizada. Comparto referencia por WhatsApp.",
       category: "llavero",
@@ -127,6 +135,7 @@ export const PRODUCTS: Product[] = [
     material: "PLA",
     isHighRotation: true,
     tags: ["logo", "equipo", "empresa", "souvenir"],
+    image: "/works/llavero-spotify.jpg",
     prefill: {
       description: "Quiero un llavero circular con un logo o escudo. Comparto la imagen de referencia por WhatsApp.",
       category: "llavero",
@@ -165,6 +174,7 @@ export const PRODUCTS: Product[] = [
     material: "PETG",
     isHighRotation: true,
     tags: ["escritorio", "gaming", "funcional", "setup"],
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
     prefill: {
       description: "Quiero un soporte para auriculares over-ear. Diseño minimalista para escritorio.",
       category: "funcional",
@@ -203,6 +213,7 @@ export const PRODUCTS: Product[] = [
     material: "PLA",
     isHighRotation: true,
     tags: ["decoracion", "plantas", "escritorio", "regalo"],
+    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=80",
     prefill: {
       description: "Quiero un macetero geométrico para suculentas pequeñas. Estilo minimalista o hexagonal.",
       category: "decoracion",
@@ -264,6 +275,7 @@ export const PRODUCTS: Product[] = [
     material: "Flexible",
     isHighRotation: false,
     tags: ["dragon", "articulado", "flexi", "fantasia", "regalo"],
+    image: "/works/dragon-articulado.jpg",
     prefill: {
       description: "Quiero un dragón articulado (flexi-print), diseño original de fantasía. Sin referencias a marcas registradas.",
       category: "figura",
@@ -383,6 +395,7 @@ export const PRODUCTS: Product[] = [
     material: "PETG",
     isHighRotation: true,
     tags: ["hogar", "organización", "pared", "control"],
+    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=800&q=80",
     prefill: {
       description: "Quiero un soporte de pared para controles remotos. PETG, diseño discreto, instalación con cinta o tornillos.",
       category: "funcional",
@@ -455,6 +468,7 @@ export const PRODUCTS: Product[] = [
     material: "PETG",
     isHighRotation: false,
     tags: ["hogar", "cocina", "tablet", "funcional"],
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
     prefill: {
       description: "Quiero un soporte de tablet para cocina en PETG, ajustable, para ver recetas con manos libres.",
       category: "funcional",

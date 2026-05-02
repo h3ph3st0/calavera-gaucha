@@ -1,3 +1,5 @@
+import type { UniverseSlug } from "@/lib/catalog";
+
 export type WorkCategory = "llavero" | "universos" | "hogar" | "personalizado";
 
 export interface Work {
@@ -9,6 +11,7 @@ export interface Work {
   emoji: string;
   gradient: string;
   image?: string;
+  universeSlug?: UniverseSlug;
 }
 
 export interface InspirationItem {
@@ -30,6 +33,7 @@ export const WORKS: Work[] = [
     emoji: "👁️",
     gradient: "from-future/20 to-future/5",
     image: "/works/vecna-cupula.jpg",
+    universeSlug: "retro",
   },
   {
     id: "w2",
@@ -50,6 +54,7 @@ export const WORKS: Work[] = [
     emoji: "🪄",
     gradient: "from-potter/20 to-potter/5",
     image: "/works/lampara-harry-potter.jpg",
+    universeSlug: "fantasia-medieval",
   },
   {
     id: "w4",
@@ -60,6 +65,7 @@ export const WORKS: Work[] = [
     emoji: "👾",
     gradient: "from-future/20 to-future/5",
     image: "/works/predator.jpg",
+    universeSlug: "ciencia-ficcion",
   },
   {
     id: "w5",
@@ -70,6 +76,7 @@ export const WORKS: Work[] = [
     emoji: "⚡",
     gradient: "from-anime/20 to-anime/5",
     image: "/works/gogeta-dragon-ball.jpg",
+    universeSlug: "anime-manga",
   },
   {
     id: "w6",
@@ -80,6 +87,7 @@ export const WORKS: Work[] = [
     emoji: "🌑",
     gradient: "from-starwars/20 to-starwars/5",
     image: "/works/darth-vader.jpg",
+    universeSlug: "ciencia-ficcion",
   },
   {
     id: "w7",
@@ -90,6 +98,7 @@ export const WORKS: Work[] = [
     emoji: "⚖️",
     gradient: "from-bronze/20 to-bronze/5",
     image: "/works/justicia-dorada.jpg",
+    universeSlug: "fantasia-medieval",
   },
   {
     id: "w8",
@@ -100,6 +109,7 @@ export const WORKS: Work[] = [
     emoji: "🎸",
     gradient: "from-future/20 to-future/5",
     image: "/works/eddie-munson.jpg",
+    universeSlug: "retro",
   },
   {
     id: "w9",
@@ -130,6 +140,7 @@ export const WORKS: Work[] = [
     emoji: "🔑",
     gradient: "from-potter/20 to-potter/5",
     image: "/works/llavero-stitch.jpg",
+    universeSlug: "anime-manga",
   },
   {
     id: "w12",
@@ -180,6 +191,7 @@ export const WORKS: Work[] = [
     emoji: "🦾",
     gradient: "from-starwars/20 to-starwars/5",
     image: "/works/wolverine.jpg",
+    universeSlug: "fantasia-medieval",
   },
   {
     id: "w17",
@@ -190,6 +202,7 @@ export const WORKS: Work[] = [
     emoji: "🧸",
     gradient: "from-future/20 to-future/5",
     image: "/works/poppy-playtime.jpg",
+    universeSlug: "retro",
   },
   {
     id: "w18",
@@ -200,6 +213,7 @@ export const WORKS: Work[] = [
     emoji: "⛓️",
     gradient: "from-anime/20 to-anime/5",
     image: "/works/chainsaw-man.jpg",
+    universeSlug: "anime-manga",
   },
   {
     id: "w19",
@@ -230,16 +244,18 @@ export const WORKS: Work[] = [
     emoji: "📺",
     gradient: "from-future/20 to-future/5",
     image: "/works/skibidi-toilet.jpg",
+    universeSlug: "retro",
   },
   {
     id: "w22",
-    title: "Repisa esquinera — hogar",
-    category: "hogar",
+    title: "TIE Fighter — Star Wars",
+    category: "universos",
     material: "PLA blanco",
-    printTime: "3 hs",
-    emoji: "🪴",
-    gradient: "from-bronze/20 to-bronze/5",
+    printTime: "7 hs",
+    emoji: "🚀",
+    gradient: "from-starwars/20 to-starwars/5",
     image: "/works/repisa-esquinera.jpg",
+    universeSlug: "ciencia-ficcion",
   },
   {
     id: "w23",
@@ -250,8 +266,24 @@ export const WORKS: Work[] = [
     emoji: "💙",
     gradient: "from-anime/20 to-anime/5",
     image: "/works/stitch-figura.jpg",
+    universeSlug: "anime-manga",
+  },
+  {
+    id: "w24",
+    title: "Dragón articulado — flexi-print",
+    category: "universos",
+    material: "Flexible negro",
+    printTime: "8 hs",
+    emoji: "🐉",
+    gradient: "from-potter/20 to-potter/5",
+    image: "/works/dragon-articulado.jpg",
+    universeSlug: "fantasia-medieval",
   },
 ];
+
+export function getWorksByUniverse(slug: UniverseSlug): Work[] {
+  return WORKS.filter((w) => w.universeSlug === slug);
+}
 
 export const INSPIRATIONS: InspirationItem[] = [
   {

@@ -602,6 +602,7 @@ export function QuoteForm({ prefill }: { prefill?: PrefillValues }) {
     });
 
     let quoteId: string;
+    let quoteCreated = false;
 
     try {
       const res = await fetch("/api/quotes", {
@@ -624,8 +625,20 @@ export function QuoteForm({ prefill }: { prefill?: PrefillValues }) {
 
       const json = await res.json();
       quoteId = json.id ?? crypto.randomUUID();
+      quoteCreated = !!json.id;
     } catch {
       quoteId = crypto.randomUUID();
+    }
+
+    // Subir archivos al servidor (no bloquea el flujo si falla)
+    if (quoteCreated && validFiles.length > 0) {
+      try {
+        const fd = new FormData();
+        validFiles.forEach((f) => fd.append("files", f.file, f.safeName));
+        await fetch(`/api/quotes/${quoteId}/files`, { method: "POST", body: fd });
+      } catch {
+        // El presupuesto ya fue guardado; los archivos son opcionales
+      }
     }
 
     const whatsappUrl = buildWhatsAppLink({

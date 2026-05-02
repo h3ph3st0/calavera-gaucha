@@ -1,12 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getProductsByCategory, formatPrice } from "@/lib/catalog";
 
 const HOGAR_EMOJI: Record<string, string> = {
-  "porta-control":        "📺",
-  "ganchos-entrada":      "🪝",
-  "dispensador-bolsas":   "🛍️",
-  "organizador-bano":     "🚿",
-  "soporte-tablet-cocina":"📱",
+  "porta-control":         "📺",
+  "ganchos-entrada":       "🪝",
+  "dispensador-bolsas":    "🛍️",
+  "organizador-bano":      "🚿",
+  "soporte-tablet-cocina": "📱",
 };
 
 export function HogarSection() {
@@ -40,18 +41,32 @@ export function HogarSection() {
             <Link
               key={p.slug}
               href={`/catalogo/${p.slug}`}
-              className="group flex flex-col rounded-2xl border border-white/8 bg-card p-5 transition-all duration-200 hover:border-white/20 hover:shadow-lg hover:shadow-black/20"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-card transition-all duration-200 hover:border-white/20 hover:shadow-lg hover:shadow-black/20"
             >
-              <span className="mb-3 text-2xl">
-                {HOGAR_EMOJI[p.slug] ?? "🏠"}
-              </span>
-              <p className="text-sm font-semibold leading-snug text-primary transition-colors group-hover:text-cta">
-                {p.name}
-              </p>
-              <p className="mt-1 line-clamp-2 text-xs text-secondary">{p.tagline}</p>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs text-muted">{p.material}</span>
-                <span className="text-xs font-semibold text-bronze">{formatPrice(p.priceFrom)}</span>
+              <div className="relative h-36 w-full overflow-hidden bg-gradient-to-br from-cta/10 to-cta/3">
+                {p.image ? (
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-3xl">
+                    {HOGAR_EMOJI[p.slug] ?? "🏠"}
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col p-4">
+                <p className="text-sm font-semibold leading-snug text-primary transition-colors group-hover:text-cta">
+                  {p.name}
+                </p>
+                <p className="mt-1 line-clamp-2 text-xs text-secondary">{p.tagline}</p>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-xs text-muted">{p.material}</span>
+                  <span className="text-xs font-semibold text-bronze">{formatPrice(p.priceFrom)}</span>
+                </div>
               </div>
             </Link>
           ))}

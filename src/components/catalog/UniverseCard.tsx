@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Universe } from "@/lib/catalog";
@@ -38,25 +39,51 @@ export function UniverseCard({ universe, productCount }: Props) {
     <Link
       href={`/universos/${universe.slug}`}
       className={cn(
-        "flex flex-col rounded-2xl border-2 p-6 transition-all",
+        "group flex flex-col overflow-hidden rounded-2xl border-2 transition-all",
         colors.bg,
         colors.border
       )}
     >
-      <div className="mb-4 flex items-start justify-between">
-        <span className="text-4xl">{universe.icon}</span>
-        <span className={cn("rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", colors.text, colors.border.split(" ")[0])}>
-          {productCount} prod.
-        </span>
-      </div>
+      {universe.previewImage && (
+        <div className="relative h-48 w-full overflow-hidden">
+          <Image
+            src={universe.previewImage}
+            alt={universe.name}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <span className="absolute bottom-3 left-4 text-4xl">{universe.icon}</span>
+        </div>
+      )}
 
-      <h3 className="text-lg font-bold text-primary">{universe.name}</h3>
-      <p className={cn("mt-0.5 text-sm font-medium", colors.text)}>{universe.tagline}</p>
-      <p className="mt-2 line-clamp-2 text-sm text-secondary">{universe.description}</p>
+      <div className="flex flex-col p-6">
+        {!universe.previewImage && (
+          <div className="mb-4 flex items-start justify-between">
+            <span className="text-4xl">{universe.icon}</span>
+            <span className={cn("rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", colors.text, colors.border.split(" ")[0])}>
+              {productCount} prod.
+            </span>
+          </div>
+        )}
 
-      <div className={cn("mt-4 flex items-center gap-1 text-sm font-semibold", colors.text)}>
-        Explorar
-        <ArrowRight className="h-4 w-4" />
+        {universe.previewImage && (
+          <div className="mb-3 flex justify-end">
+            <span className={cn("rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", colors.text, colors.border.split(" ")[0])}>
+              {productCount} prod.
+            </span>
+          </div>
+        )}
+
+        <h3 className="text-lg font-bold text-primary">{universe.name}</h3>
+        <p className={cn("mt-0.5 text-sm font-medium", colors.text)}>{universe.tagline}</p>
+        <p className="mt-2 line-clamp-2 text-sm text-secondary">{universe.description}</p>
+
+        <div className={cn("mt-4 flex items-center gap-1 text-sm font-semibold", colors.text)}>
+          Explorar
+          <ArrowRight className="h-4 w-4" />
+        </div>
       </div>
     </Link>
   );

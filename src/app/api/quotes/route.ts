@@ -3,6 +3,7 @@ import { quoteSchema } from "@/lib/validations/quote";
 import { checkRateLimit, getClientIp, sanitizeText } from "@/lib/security/sanitize";
 import { calculateLeadScore } from "@/lib/whatsapp";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendNewQuoteNotification } from "@/lib/email";
 
 const TENANT_SLUG = "calavera-gaucha";
 
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
   });
 
   try {
-    const supabase = await createServiceClient();
+    const supabase = createServiceClient();
 
     const { data: tenant, error: tenantError } = await supabase
       .from("tenants")
@@ -85,6 +86,21 @@ export async function POST(request: NextRequest) {
       console.error("[quotes] insert error", error);
       return NextResponse.json({ error: "No se pudo guardar el presupuesto" }, { status: 500 });
     }
+
+    // Notificación por email (no bloquea la respuesta; falla silenciosamente)
+    await Promise.race([
+      sendNewQuoteNotification({
+        quoteId: quote.id,
+        name: data.name,
+        whatsapp: data.whatsapp ?? null,
+        email: data.email ?? null,
+        description: data.description,
+        leadScore,
+        urgency: data.urgency,
+        quantity: data.quantity,
+      }).catch(() => {}),
+      new Promise<void>((r) => setTimeout(r, 2500)),
+    ]);
 
     return NextResponse.json({ id: quote.id, leadScore }, { status: 201 });
   } catch (err) {

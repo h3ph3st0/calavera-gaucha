@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight, Package, Ruler, Layers } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -102,8 +103,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </nav>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <div className={`flex h-64 items-center justify-center rounded-2xl bg-gradient-to-br text-8xl lg:h-80 ${gradient}`}>
-              {ICON[product.category]}
+            <div className={`relative h-64 overflow-hidden rounded-2xl bg-gradient-to-br lg:h-80 ${gradient}`}>
+              {product.image ? (
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-8xl">
+                  {ICON[product.category]}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col">

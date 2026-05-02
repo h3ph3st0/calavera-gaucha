@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { UNIVERSES, getUniverseBySlug, getProductsByUniverse } from "@/lib/catalog";
+import { getWorksByUniverse } from "@/lib/social-proof";
 import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -55,6 +57,7 @@ export default async function UniversePage({ params }: { params: Promise<{ slug:
   if (!universe) notFound();
 
   const products = getProductsByUniverse(universe.slug);
+  const works = getWorksByUniverse(universe.slug);
   const styles = ACCENT_STYLES[universe.accentColor] ?? ACCENT_STYLES.indigo;
 
   const customQuoteUrl =
@@ -106,6 +109,49 @@ export default async function UniversePage({ params }: { params: Promise<{ slug:
             <p className="py-10 text-center text-secondary">
               Productos de este universo próximamente.
             </p>
+          )}
+
+          {works.length > 0 && (
+            <div className="mt-12">
+              <h2 className="mb-6 text-lg font-bold text-primary">
+                Trabajos realizados — {universe.name}
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {works.map((work) => (
+                  <div
+                    key={work.id}
+                    className="overflow-hidden rounded-2xl border border-white/8 bg-card"
+                  >
+                    <div className="relative h-48 w-full overflow-hidden">
+                      {work.image ? (
+                        <Image
+                          src={work.image}
+                          alt={work.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div
+                          className={cn(
+                            "flex h-full w-full items-center justify-center bg-gradient-to-br",
+                            work.gradient
+                          )}
+                        >
+                          <span className="text-5xl">{work.emoji}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-semibold text-primary">{work.title}</p>
+                      <p className="mt-1 text-xs text-muted">
+                        {work.material} · {work.printTime}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-white/8 bg-card px-6 py-10 text-center sm:flex-row sm:text-left">
