@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
@@ -34,26 +35,34 @@ export async function LatestWorksSection() {
             const images = (allImages ?? []).filter(img => img.work_id === work.id);
             const cover = images[0];
             return (
-              <div key={work.id} className="overflow-hidden rounded-2xl border border-white/8 bg-card">
+              <Link
+                key={work.id}
+                href={`/trabajos/${work.id}`}
+                className="group overflow-hidden rounded-2xl border border-white/8 bg-card transition-colors hover:border-bronze/30"
+              >
                 {cover ? (
-                  <div className="relative h-52 w-full">
+                  <div className="relative h-52 w-full overflow-hidden">
                     <Image
                       src={`${SUPABASE_URL}/storage/v1/object/public/work-images/${cover.storage_path}`}
                       alt={work.title}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
                   </div>
                 ) : (
                   <div className="h-52 bg-layer" />
                 )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-primary">{work.title}</h3>
-                  {work.description && (
-                    <p className="mt-1 line-clamp-2 text-sm text-secondary">{work.description}</p>
-                  )}
+                <div className="flex items-start justify-between p-4">
+                  <div>
+                    <h3 className="font-semibold text-primary">{work.title}</h3>
+                    {work.description && (
+                      <p className="mt-1 line-clamp-2 text-sm text-secondary">{work.description}</p>
+                    )}
+                  </div>
+                  <ArrowRight className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted transition-colors group-hover:text-bronze" />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

@@ -16,11 +16,11 @@ export default function HomePage() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <LatestWorksSection />
         <Features />
         <UniversesCTA />
         <HogarSection />
         <InspirationGrid />
-        <LatestWorksSection />
         <WorksGallery />
         <ProcessSection />
 
