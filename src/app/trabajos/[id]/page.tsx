@@ -2,15 +2,10 @@ import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import dynamic from "next/dynamic";
+import { WorkGalleryClient } from "@/components/works/WorkGalleryWrapper";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
-
-const WorkGallery = dynamic(
-  () => import("@/components/works/WorkGallery").then(m => m.WorkGallery),
-  { ssr: false }
-);
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
@@ -65,7 +60,7 @@ export default async function WorkDetailPage({ params }: Props) {
           )}
 
           {images && images.length > 0 && (
-            <WorkGallery images={images} title={work.title} supabaseUrl={SUPABASE_URL} />
+            <WorkGalleryClient images={images} title={work.title} supabaseUrl={SUPABASE_URL} />
           )}
 
           <div className="mt-12 rounded-2xl border border-white/8 bg-card p-6 text-center">
