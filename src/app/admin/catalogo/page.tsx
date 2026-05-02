@@ -15,12 +15,19 @@ export default async function AdminCatalogoPage() {
   const { data: tenant } = await supabase
     .from("tenants").select("id").eq("slug", TENANT_SLUG).single();
 
-  const { data: products } = await supabase
-    .from("products")
-    .select("id, slug, name, category_slug, base_price, is_high_rotation, is_active, universe:universes(slug, name)")
-    .eq("tenant_id", tenant?.id ?? "")
-    .order("category_slug", { ascending: true })
-    .order("name", { ascending: true });
+  const [{ data: products }, { data: universesData }] = await Promise.all([
+    supabase
+      .from("products")
+      .select("id, slug, name, category_slug, base_price, is_high_rotation, is_active, universe_id")
+      .eq("tenant_id", tenant?.id ?? "")
+      .order("category_slug", { ascending: true })
+      .order("name", { ascending: true }),
+    supabase
+      .from("universes")
+      .select("id, name")
+      .eq("tenant_id", tenant?.id ?? ""),
+  ]);
+  const universeNameMap = new Map((universesData ?? []).map((u) => [u.id, u.name]));
 
   const grouped: Record<string, typeof products> = {};
   for (const p of products ?? []) {
@@ -61,15 +68,15 @@ export default async function AdminCatalogoPage() {
               </p>
               <div className="space-y-2">
                 {(items ?? []).map((p) => {
-                  const universe = p.universe as { slug: string; name: string } | null;
+                  const universeName = p.universe_id ? universeNameMap.get(p.universe_id) : null;
                   return (
                     <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-white/8 bg-card px-4 py-3">
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <p className="truncate font-semibold text-primary">{p.name}</p>
-                          {universe && (
+                          {universeName && (
                             <span className="rounded-full bg-layer px-2 py-0.5 text-[10px] text-muted">
-                              {universe.name}
+                              {universeName}
                             </span>
                           )}
                           {p.is_high_rotation && (

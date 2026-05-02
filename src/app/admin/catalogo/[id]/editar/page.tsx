@@ -18,6 +18,24 @@ type PrefillJson = {
   material?: string;
 };
 
+type RawProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string | null;
+  description: string | null;
+  category_slug: string | null;
+  base_price: number | null;
+  size_range: string | null;
+  material: string | null;
+  is_high_rotation: boolean;
+  tags: string[];
+  image_url: string | null;
+  prefill: unknown;
+  is_active: boolean;
+  universe_id: string | null;
+};
+
 export default async function EditarProductoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = createServiceClient();
@@ -25,12 +43,12 @@ export default async function EditarProductoPage({ params }: { params: Promise<{
   const { data: tenant } = await supabase
     .from("tenants").select("id").eq("slug", TENANT_SLUG).single();
 
-  const [{ data: raw }, { data: universesData }] = await Promise.all([
+  const [{ data: rawData }, { data: universesData }] = await Promise.all([
     supabase
       .from("products")
-      .select("id, slug, name, tagline, description, category_slug, base_price, size_range, material, is_high_rotation, tags, image_url, prefill, is_active, universe:universes(id, slug)")
+      .select("id, slug, name, tagline, description, category_slug, base_price, size_range, material, is_high_rotation, tags, image_url, prefill, is_active, universe_id")
       .eq("id", id)
-      .single(),
+      .maybeSingle(),
     supabase
       .from("universes")
       .select("id, slug, name, tagline, description, theme, accent_color, icon, preview_image")
@@ -39,11 +57,14 @@ export default async function EditarProductoPage({ params }: { params: Promise<{
       .order("created_at", { ascending: true }),
   ]);
 
+  const raw = rawData as RawProduct | null;
   if (!raw) notFound();
 
   const prefill = (raw.prefill ?? {}) as PrefillJson;
-  const universeRel = raw.universe as { id: string; slug: string } | null;
-  const currentUniverseId = universeRel?.id;
+
+  // Resolve universe slug from universes list
+  const currentUniverseId = raw.universe_id ?? undefined;
+  const universeEntry = universesData?.find((u) => u.id === raw.universe_id);
 
   const product: Product & { id: string; is_active: boolean } = {
     id: raw.id,
@@ -52,7 +73,7 @@ export default async function EditarProductoPage({ params }: { params: Promise<{
     tagline: raw.tagline ?? "",
     description: raw.description ?? "",
     category: (raw.category_slug as Category) ?? "decoracion",
-    universeSlug: (universeRel?.slug as UniverseSlug) ?? undefined,
+    universeSlug: (universeEntry?.slug as UniverseSlug) ?? undefined,
     priceFrom: raw.base_price ?? undefined,
     sizeRange: raw.size_range ?? "",
     material: raw.material ?? "",
