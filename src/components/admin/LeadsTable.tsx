@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { MessageCircle, ChevronDown, ChevronUp, StickyNote } from "lucide-react";
+import { MessageCircle, ChevronDown, ChevronUp, StickyNote, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { updateLeadStatus, updateLeadNotes } from "@/app/admin/leads/actions";
 import { buildAdminWhatsAppLink } from "@/lib/whatsapp";
 import type { QuoteStatus } from "@/lib/supabase/types";
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
+
+interface QuoteFile {
+  name: string;
+  url: string;
+  size: number;
+}
 
 interface Lead {
   id: string;
@@ -26,6 +32,7 @@ interface Lead {
   admin_notes: string | null;
   created_at: string;
   updated_at: string;
+  files: QuoteFile[];
 }
 
 // ─── Badges ───────────────────────────────────────────────────────────────────
@@ -64,6 +71,12 @@ const BUDGET_LABEL: Record<string, string> = {
 };
 
 const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -132,6 +145,12 @@ function LeadRow({ lead }: { lead: Lead }) {
             {lead.size && <span>📐 {lead.size}</span>}
             {lead.material && lead.material !== "no-se" && <span>🎨 {lead.material}</span>}
             <span>🔢 {lead.quantity} ud.</span>
+            {lead.files.length > 0 && (
+              <span className="flex items-center gap-1 text-bronze">
+                <Paperclip className="h-3 w-3" />
+                {lead.files.length} archivo{lead.files.length !== 1 ? "s" : ""}
+              </span>
+            )}
             <span>#{ref}</span>
             <span>{formatDate(lead.created_at)}</span>
           </div>
@@ -193,6 +212,30 @@ function LeadRow({ lead }: { lead: Lead }) {
               <p className="text-sm text-primary">{lead.description}</p>
             </div>
           </div>
+
+          {lead.files.length > 0 && (
+            <div className="mt-4">
+              <div className="mb-1.5 flex items-center gap-1.5">
+                <Paperclip className="h-3.5 w-3.5 text-muted" />
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted">Archivos adjuntos</p>
+              </div>
+              <div className="space-y-1.5">
+                {lead.files.map((f, i) => (
+                  <a
+                    key={i}
+                    href={f.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-xl border border-white/12 bg-base px-3 py-2 text-sm transition-colors hover:border-bronze/30"
+                  >
+                    <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted" />
+                    <span className="min-w-0 flex-1 truncate text-primary">{f.name}</span>
+                    <span className="shrink-0 text-xs text-muted">{formatBytes(f.size)}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mt-4">
             <div className="mb-1.5 flex items-center gap-1.5">

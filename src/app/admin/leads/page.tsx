@@ -52,6 +52,40 @@ export default async function LeadsPage({ searchParams }: Props) {
   const { data: leads, error } = await dataQ;
   if (error) console.error("[admin/leads] fetch error", error);
 
+  // Archivos adjuntos — una sola query + signed URLs (1 h de validez)
+  const leadIds = (leads ?? []).map((l) => l.id);
+  const filesByQuoteId: Record<string, { name: string; url: string; size: number }[]> = {};
+
+  if (leadIds.length > 0) {
+    const { data: filesData } = await supabase
+      .from("quote_files")
+      .select("quote_id, storage_path, original_name, size_bytes")
+      .in("quote_id", leadIds);
+
+    const paths = (filesData ?? []).map((f) => f.storage_path);
+    if (paths.length > 0) {
+      const { data: signedData } = await supabase.storage
+        .from("quote-files")
+        .createSignedUrls(paths, 3600);
+
+      const urlMap = new Map(
+        (signedData ?? []).filter((s) => s.signedUrl).map((s) => [s.path, s.signedUrl])
+      );
+
+      for (const f of filesData ?? []) {
+        const url = urlMap.get(f.storage_path);
+        if (!url) continue;
+        if (!filesByQuoteId[f.quote_id]) filesByQuoteId[f.quote_id] = [];
+        filesByQuoteId[f.quote_id].push({ name: f.original_name, url, size: f.size_bytes });
+      }
+    }
+  }
+
+  const leadsWithFiles = (leads ?? []).map((l) => ({
+    ...l,
+    files: filesByQuoteId[l.id] ?? [],
+  }));
+
   const totalCount  = count ?? 0;
   const totalPages  = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   const safePage    = Math.min(page, totalPages);
@@ -95,7 +129,7 @@ export default async function LeadsPage({ searchParams }: Props) {
         </div>
       ) : (
         <>
-          <LeadsTable leads={leads} />
+          <LeadsTable leads={leadsWithFiles} />
           {totalPages > 1 && (
             <Pagination
               page={safePage}
