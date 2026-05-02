@@ -14,8 +14,14 @@ export default async function WorksPage() {
   const supabase = createServiceClient();
   const { data: works } = await supabase
     .from("works")
-    .select("id, title, is_published, created_at, work_images(id, storage_path, display_order)")
+    .select("id, title, is_published, created_at")
     .order("created_at", { ascending: false });
+
+  const { data: allImages } = await supabase
+    .from("work_images")
+    .select("id, work_id, storage_path, display_order")
+    .in("work_id", works?.map(w => w.id) ?? [])
+    .order("display_order", { ascending: true });
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -43,8 +49,8 @@ export default async function WorksPage() {
       ) : (
         <div className="space-y-3">
           {works.map(work => {
-            const images = ((work.work_images as { id: string; storage_path: string; display_order: number }[]) ?? [])
-              .sort((a, b) => a.display_order - b.display_order);
+            const images = (allImages ?? [])
+              .filter(img => img.work_id === work.id);
             const cover = images[0];
             return (
               <div key={work.id} className="flex items-center gap-4 rounded-2xl border border-white/8 bg-card p-4">

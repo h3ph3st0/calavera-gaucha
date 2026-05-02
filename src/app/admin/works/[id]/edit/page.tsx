@@ -20,15 +20,19 @@ export default async function EditWorkPage({ params }: Props) {
 
   const { data: work } = await supabase
     .from("works")
-    .select("id, title, description, is_published, work_images(id, storage_path, display_order)")
+    .select("id, title, description, is_published")
     .eq("id", id)
     .single();
 
   if (!work) notFound();
 
-  const images = ((work.work_images as { id: string; storage_path: string; display_order: number }[]) ?? [])
-    .sort((a, b) => a.display_order - b.display_order)
-    .map(img => ({ ...img, supabaseUrl: SUPABASE_URL }));
+  const { data: rawImages } = await supabase
+    .from("work_images")
+    .select("id, storage_path, display_order")
+    .eq("work_id", id)
+    .order("display_order", { ascending: true });
+
+  const images = (rawImages ?? []).map(img => ({ ...img, supabaseUrl: SUPABASE_URL }));
 
   const updateAction = updateWork.bind(null, id);
 

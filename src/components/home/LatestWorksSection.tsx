@@ -8,12 +8,18 @@ export async function LatestWorksSection() {
   const supabase = createServiceClient();
   const { data: works } = await supabase
     .from("works")
-    .select("id, title, description, work_images(storage_path, display_order)")
+    .select("id, title, description")
     .eq("is_published", true)
     .order("created_at", { ascending: false })
     .limit(6);
 
   if (!works?.length) return null;
+
+  const { data: allImages } = await supabase
+    .from("work_images")
+    .select("work_id, storage_path, display_order")
+    .in("work_id", works.map(w => w.id))
+    .order("display_order", { ascending: true });
 
   return (
     <section className="bg-layer px-4 py-16 sm:px-6 sm:py-24">
@@ -25,8 +31,7 @@ export async function LatestWorksSection() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {works.map(work => {
-            const images = ((work.work_images as { storage_path: string; display_order: number }[]) ?? [])
-              .sort((a, b) => a.display_order - b.display_order);
+            const images = (allImages ?? []).filter(img => img.work_id === work.id);
             const cover = images[0];
             return (
               <div key={work.id} className="overflow-hidden rounded-2xl border border-white/8 bg-card">
@@ -47,9 +52,6 @@ export async function LatestWorksSection() {
                   {work.description && (
                     <p className="mt-1 line-clamp-2 text-sm text-secondary">{work.description}</p>
                   )}
-                  <p className="mt-2 text-xs text-muted">
-                    {images.length} foto{images.length !== 1 ? "s" : ""}
-                  </p>
                 </div>
               </div>
             );
