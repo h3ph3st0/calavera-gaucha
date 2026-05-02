@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import Image from "next/image";
+import { WorkGallery } from "@/components/works/WorkGallery";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -60,19 +60,7 @@ export default async function WorkDetailPage({ params }: Props) {
           )}
 
           {images && images.length > 0 && (
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {images.map((img, i) => (
-                <div key={img.id} className={`relative overflow-hidden rounded-2xl ${i === 0 ? "sm:col-span-2 h-80" : "h-60"}`}>
-                  <Image
-                    src={`${SUPABASE_URL}/storage/v1/object/public/work-images/${img.storage_path}`}
-                    alt={`${work.title} — foto ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                </div>
-              ))}
-            </div>
+            <WorkGallery images={images} title={work.title} supabaseUrl={SUPABASE_URL} />
           )}
 
           <div className="mt-12 rounded-2xl border border-white/8 bg-card p-6 text-center">
