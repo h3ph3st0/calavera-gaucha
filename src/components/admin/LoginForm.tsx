@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 
 export function LoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +24,7 @@ export function LoginForm() {
         return;
       }
 
-      router.push("/admin/leads");
-      router.refresh();
+      window.location.href = "/admin/leads";
     } catch {
       setError("Error de conexión. Intentá de nuevo.");
     } finally {

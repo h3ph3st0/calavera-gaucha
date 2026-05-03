@@ -32,3 +32,24 @@ export async function updateLeadNotes(leadId: string, notes: string) {
   if (error) throw new Error(error.message);
   revalidatePath("/admin/leads");
 }
+
+export async function deleteLead(leadId: string) {
+  await assertAdmin();
+  const supabase = createServiceClient();
+
+  // Borrar archivos del bucket antes de borrar el registro
+  const { data: files } = await supabase
+    .from("quote_files")
+    .select("storage_path")
+    .eq("quote_id", leadId);
+
+  if (files && files.length > 0) {
+    await supabase.storage
+      .from("quote-files")
+      .remove(files.map((f) => f.storage_path));
+  }
+
+  const { error } = await supabase.from("quotes").delete().eq("id", leadId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/leads");
+}

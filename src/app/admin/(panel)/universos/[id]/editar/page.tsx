@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import { UniverseForm } from "@/components/admin/UniverseForm";
-import { updateUniverse } from "@/app/admin/universos/actions";
+import { updateUniverse } from "@/app/admin/(panel)/universos/actions";
 
 export const metadata: Metadata = { title: "Editar universo — Admin" };
 

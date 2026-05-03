@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { deleteProduct } from "@/app/admin/catalogo/actions";
+import { deleteProduct } from "@/app/admin/(panel)/catalogo/actions";
 
 export function DeleteProductButton({ productId, name }: { productId: string; name: string }) {
   async function handleDelete() {

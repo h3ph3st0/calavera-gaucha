@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ProductForm } from "@/components/admin/ProductForm";
-import { updateProduct } from "@/app/admin/catalogo/actions";
+import { updateProduct } from "@/app/admin/(panel)/catalogo/actions";
 import type { Product, Universe, Category, UniverseSlug } from "@/lib/catalog";
 
 export const metadata: Metadata = { title: "Editar producto — Admin" };

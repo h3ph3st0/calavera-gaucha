@@ -3,8 +3,9 @@
 import { useState, useTransition } from "react";
 import { MessageCircle, ChevronDown, ChevronUp, StickyNote, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { updateLeadStatus, updateLeadNotes } from "@/app/admin/leads/actions";
+import { updateLeadStatus, updateLeadNotes } from "@/app/admin/(panel)/leads/actions";
 import { buildAdminWhatsAppLink } from "@/lib/whatsapp";
+import { DeleteLeadButton } from "@/components/admin/DeleteLeadButton";
 import type { QuoteStatus } from "@/lib/supabase/types";
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -277,6 +278,10 @@ function LeadRow({ lead, files }: { lead: Lead; files: QuoteFile[] }) {
                 {notes || "Agregar nota..."}
               </button>
             )}
+          </div>
+
+          <div className="mt-4 flex justify-end border-t border-white/8 pt-3">
+            <DeleteLeadButton leadId={lead.id} name={lead.name} />
           </div>
         </div>
       )}

@@ -1,12 +1,12 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { deleteWork } from "@/app/admin/(panel)/works/actions";
+import { deleteLead } from "@/app/admin/(panel)/leads/actions";
 
-export function DeleteWorkButton({ workId, title }: { workId: string; title: string }) {
+export function DeleteLeadButton({ leadId, name }: { leadId: string; name: string }) {
   async function handleDelete() {
-    if (!confirm(`¿Borrar "${title}" y todas sus fotos?`)) return;
-    await deleteWork(workId);
+    if (!confirm(`¿Borrar el pedido de "${name}"?`)) return;
+    await deleteLead(leadId);
   }
 
   return (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ProductForm } from "@/components/admin/ProductForm";
-import { createProduct } from "@/app/admin/catalogo/actions";
+import { createProduct } from "@/app/admin/(panel)/catalogo/actions";
 import type { Universe } from "@/lib/catalog";
 
 export const metadata: Metadata = { title: "Nuevo producto — Admin" };
