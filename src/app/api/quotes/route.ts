@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { quoteSchema } from "@/lib/validations/quote";
-import { checkRateLimit, getClientIp, sanitizeText } from "@/lib/security/sanitize";
+import { checkRateLimit } from "@/lib/security/ratelimit";
+import { getClientIp, sanitizeText } from "@/lib/security/sanitize";
 import { calculateLeadScore } from "@/lib/whatsapp";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendNewQuoteNotification } from "@/lib/email";
@@ -9,7 +10,7 @@ const TENANT_SLUG = "calavera-gaucha";
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const { allowed } = checkRateLimit(ip, 5, 60_000);
+  const { allowed } = await checkRateLimit(ip, 5, 60_000);
   if (!allowed) {
     return NextResponse.json({ error: "Demasiadas solicitudes. Esperá un momento." }, { status: 429 });
   }

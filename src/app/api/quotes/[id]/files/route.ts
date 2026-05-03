@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { validateFile, MAX_FILES } from "@/lib/validations/quote";
+import { validateFile, validateFileMagicBytes, MAX_FILES } from "@/lib/validations/quote";
+import { checkRateLimit } from "@/lib/security/ratelimit";
+import { getClientIp } from "@/lib/security/sanitize";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -12,6 +14,12 @@ export async function POST(
 
   if (!UUID_RE.test(quoteId)) {
     return NextResponse.json({ error: "ID inválido" }, { status: 400 });
+  }
+
+  const ip = getClientIp(request);
+  const { allowed } = await checkRateLimit(ip, 10, 60_000);
+  if (!allowed) {
+    return NextResponse.json({ error: "Demasiadas solicitudes. Esperá un momento." }, { status: 429 });
   }
 
   let formData: FormData;
@@ -47,6 +55,12 @@ export async function POST(
     const validation = validateFile(file);
     if (!validation.valid) {
       errors.push(`${file.name}: ${validation.error}`);
+      continue;
+    }
+
+    const magicValid = await validateFileMagicBytes(file);
+    if (!magicValid) {
+      errors.push(`${file.name}: el contenido no coincide con la extensión declarada`);
       continue;
     }
 

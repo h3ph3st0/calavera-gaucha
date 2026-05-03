@@ -12,7 +12,7 @@ interface Props {
   action: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
   defaultValues?: { title: string; description: string | null; is_published: boolean };
   existingImages?: ExistingImage[];
-  onDeleteImage?: (imageId: string, storagePath: string) => Promise<void>;
+  onDeleteImage?: (imageId: string) => Promise<void>;
   submitLabel: string;
 }
 
@@ -29,10 +29,10 @@ export function WorkForm({ action, defaultValues, existingImages = [], onDeleteI
     setPreviews(files.map(f => ({ url: URL.createObjectURL(f), name: f.name })));
   }
 
-  async function handleDeleteImage(imageId: string, storagePath: string) {
+  async function handleDeleteImage(imageId: string) {
     if (!onDeleteImage) return;
     setDeletingId(imageId);
-    await onDeleteImage(imageId, storagePath);
+    await onDeleteImage(imageId);
     router.refresh();
     setDeletingId(null);
   }
@@ -109,7 +109,7 @@ export function WorkForm({ action, defaultValues, existingImages = [], onDeleteI
                 {onDeleteImage && (
                   <button
                     type="button"
-                    onClick={() => handleDeleteImage(img.id, img.storage_path)}
+                    onClick={() => handleDeleteImage(img.id)}
                     disabled={deletingId === img.id}
                     className="absolute -right-1.5 -top-1.5 hidden h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white group-hover:flex disabled:opacity-60"
                   >

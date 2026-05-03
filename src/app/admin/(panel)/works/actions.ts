@@ -133,10 +133,16 @@ export async function deleteWork(workId: string) {
   revalidatePath("/");
 }
 
-export async function deleteWorkImage(imageId: string, storagePath: string) {
+export async function deleteWorkImage(imageId: string) {
   await assertAdmin();
   const supabase = createServiceClient();
-  await supabase.storage.from(BUCKET).remove([storagePath]);
+  const { data } = await supabase
+    .from("work_images")
+    .select("storage_path")
+    .eq("id", imageId)
+    .single();
+  if (!data) throw new Error("Imagen no encontrada");
+  await supabase.storage.from(BUCKET).remove([data.storage_path]);
   await supabase.from("work_images").delete().eq("id", imageId);
   revalidatePath("/admin/works");
   revalidatePath("/");
