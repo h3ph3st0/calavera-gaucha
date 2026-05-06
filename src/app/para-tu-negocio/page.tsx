@@ -117,6 +117,74 @@ export default function ParaTuNegocioPage() {
           </div>
         </section>
 
+        {/* Casos reales */}
+        <section className="bg-base px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-10 text-center">
+              <span className="inline-block rounded-full border border-bronze/30 bg-bronze/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-bronze">
+                Casos reales
+              </span>
+              <h2 className="mt-4 text-2xl font-bold text-primary sm:text-3xl">
+                Webs que ya están operando
+              </h2>
+              <p className="mt-3 text-sm text-secondary">
+                No vendemos promesas. Tocá los links y comprobá lo que hacemos.
+              </p>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <a
+                href="https://calaveragaucha.com.ar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-2xl border border-white/8 bg-card p-7 transition-colors hover:border-cta/40"
+              >
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-cta">
+                  E-commerce / SaaS de alta fidelidad
+                </p>
+                <h3 className="mb-2 text-xl font-bold text-primary">Calavera Gaucha</h3>
+                <p className="text-sm leading-relaxed text-secondary">
+                  Esta misma web. Catálogo dinámico, panel admin, formulario multi-paso con scoring, integración WhatsApp + email transaccional.
+                </p>
+                <p className="mt-4 text-xs text-muted transition-colors group-hover:text-bronze">
+                  calaveragaucha.com.ar ↗
+                </p>
+              </a>
+
+              <a
+                href="https://www.amatistaconcordia.com.ar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-2xl border border-white/8 bg-card p-7 transition-colors hover:border-cta/40"
+              >
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-cta">
+                  Gestión inteligente / Comercio personalizado
+                </p>
+                <h3 className="mb-2 text-xl font-bold text-primary">Amatista</h3>
+                <p className="text-sm leading-relaxed text-secondary">
+                  E-commerce de tazas y regalería personalizadas en Concordia. Catálogo temático, wizard de personalización, integración con redes y WhatsApp.
+                </p>
+                <p className="mt-4 text-xs text-muted transition-colors group-hover:text-bronze">
+                  amatistaconcordia.com.ar ↗
+                </p>
+              </a>
+            </div>
+
+            <p className="mt-8 text-center text-xs text-muted">
+              Ambas plataformas fueron desarrolladas por{" "}
+              <a
+                href="https://tbgh.com.ar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-bronze transition-colors hover:text-cta"
+              >
+                TBGH
+              </a>
+              {" "}— el mismo equipo que construye tu próxima web.
+            </p>
+          </div>
+        </section>
+
         {/* Social proof */}
         <section className="bg-base px-4 py-12 text-center sm:px-6">
           <div className="mx-auto max-w-2xl">
