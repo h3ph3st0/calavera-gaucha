@@ -25,10 +25,6 @@ export function Hero() {
           />
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-bronze/30 bg-bronze/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-bronze">
-          Impresión 3D bajo demanda · Argentina
-        </span>
-
         <h1 className="mt-6 text-4xl font-bold tracking-tight text-primary sm:text-6xl">
           Tu idea,{" "}
           <span className="text-cta">impresa en 3D</span>
