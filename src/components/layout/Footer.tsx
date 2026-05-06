@@ -45,6 +45,20 @@ export function Footer() {
             </a>
           </nav>
         </div>
+        <div className="mt-6 flex flex-col items-center gap-2 border-t border-white/8 pt-6 text-center text-xs text-muted sm:flex-row sm:justify-between sm:text-left">
+          <p>© {new Date().getFullYear()} Calavera Gaucha · Concordia, Entre Ríos</p>
+          <p>
+            Diseñado y desarrollado por{" "}
+            <a
+              href="https://tbgh.com.ar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-secondary transition-colors hover:text-bronze"
+            >
+              TBGH
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
