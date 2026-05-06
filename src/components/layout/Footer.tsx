@@ -17,6 +17,7 @@ export function Footer() {
             <Link href="/catalogo" className="transition-colors hover:text-secondary">Catálogo</Link>
             <Link href="/universos" className="transition-colors hover:text-secondary">Universos</Link>
             <Link href="/presupuesto" className="transition-colors hover:text-secondary">Presupuesto</Link>
+            <Link href="/para-tu-negocio" className="transition-colors hover:text-secondary">Para tu negocio</Link>
             <a
               href="https://wa.me/5493454045104"
               target="_blank"

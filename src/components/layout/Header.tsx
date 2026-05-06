@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/catalogo", label: "Catálogo" },
   { href: "/universos", label: "Universos" },
   { href: "/presupuesto", label: "Presupuesto" },
+  { href: "/para-tu-negocio", label: "Para tu negocio" },
 ];
 
 export function Header() {
