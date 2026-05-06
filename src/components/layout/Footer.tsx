@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Printer } from "lucide-react";
+import { Printer, Instagram } from "lucide-react";
 
 export function Footer() {
   return (
@@ -13,10 +13,19 @@ export function Footer() {
           <p className="text-center text-sm text-muted">
             Impresión 3D bajo demanda · Hecho en Argentina
           </p>
-          <nav className="flex gap-4 text-sm text-muted">
+          <nav className="flex items-center gap-4 text-sm text-muted">
             <Link href="/catalogo" className="transition-colors hover:text-secondary">Catálogo</Link>
             <Link href="/universos" className="transition-colors hover:text-secondary">Universos</Link>
             <Link href="/presupuesto" className="transition-colors hover:text-secondary">Presupuesto</Link>
+            <a
+              href="https://www.instagram.com/calaveragaucha?igsh=MTEydHJtMWpzeHBraQ=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-secondary"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
           </nav>
         </div>
       </div>
