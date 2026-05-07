@@ -39,6 +39,15 @@ export default function HomePage() {
             >
               Solicitar presupuesto gratis
             </Link>
+            <p className="mt-6 text-sm text-muted">
+              ¿Preferís el mail? Escribinos a{" "}
+              <a
+                href="mailto:calaveragaucha@gmail.com"
+                className="font-semibold text-secondary transition-colors hover:text-bronze"
+              >
+                calaveragaucha@gmail.com
+              </a>
+            </p>
           </div>
         </section>
       </main>
